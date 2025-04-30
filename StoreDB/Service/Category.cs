@@ -19,6 +19,11 @@ namespace StoreDB.Service
             
         }
 
+        public override string ToString()
+        {
+            return CategoryName;
+        }
+
         public int CategoryID { get; set; }
         public string CategoryName { get; set; }
 

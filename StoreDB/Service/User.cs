@@ -8,10 +8,11 @@ namespace StoreDB.Service
 {
     public class User
     {
-        public User(int userID, string username, string role)
+        public User(int userID, string username, string password, string role)
         {
             UserID = userID;
             Username = username;
+            Password = password;
             Role = role;
         }
         public User()
@@ -21,6 +22,7 @@ namespace StoreDB.Service
 
         public int UserID { get; set; }
         public string Username { get; set; }
+        public string Password { get; set; }
         public string Role { get; set; } // Например: "admin", "manager", "seller"
     }
 }

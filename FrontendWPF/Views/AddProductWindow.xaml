@@ -1,0 +1,58 @@
+﻿<Window x:Class="FrontendWPF.Views.AddProductWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FrontendWPF.Views"
+        mc:Ignorable="d"
+         d:DesignHeight="730" d:DesignWidth="800"
+        Title="Добавить товар">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <!-- Заголовок -->
+            <TextBlock Text="Добавление нового товара"
+                      FontSize="22" FontWeight="Bold" Margin="0,0,0,0" HorizontalAlignment="Center" Foreground="#7A5C2E"/>
+
+            <!-- Название -->
+            <TextBlock Text="Название:" Foreground="#7A5C2E"/>
+            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center" Margin="0,5" Background="#FFF8F1E9" BorderBrush="#D1B06B" BorderThickness="1" Height="35"/>
+
+            <!-- Категория -->
+            <TextBlock Text="Категория:" Margin="0,10,0,0" Foreground="#7A5C2E"/>
+            <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" VerticalContentAlignment="Center" Margin="0,5" Background="#FFF8F1E9" BorderBrush="#D1B06B" BorderThickness="1" Height="35"/>
+
+            <!-- Материал -->
+            <TextBlock Text="Материал:" Margin="0,10,0,0" Foreground="#7A5C2E"/>
+            <ComboBox ItemsSource="{Binding Materials}" SelectedItem="{Binding SelectedMaterial}" VerticalContentAlignment="Center" Margin="0,5" Background="#FFF8F1E9" BorderBrush="#D1B06B" BorderThickness="1" Height="35"/>
+
+            <!-- Камень -->
+            <TextBlock Text="Вставка (камень):" Margin="0,10,0,0" Foreground="#7A5C2E"/>
+            <ComboBox ItemsSource="{Binding Stones}" SelectedItem="{Binding SelectedStone}" VerticalContentAlignment="Center" Margin="0,5" Background="#FFF8F1E9" BorderBrush="#D1B06B" BorderThickness="1" Height="35"/>
+        </StackPanel>
+
+        <!-- Вес, Цена и Количество -->
+        <StackPanel Grid.Row="8" Orientation="Vertical" Margin="0,10,0,0">
+            <TextBlock Text="Вес (г):" Foreground="#7A5C2E"/>
+            <TextBox Text="{Binding Weight}" Margin="0,5" Background="#FFF8F1E9" VerticalContentAlignment="Center" BorderBrush="#D1B06B" BorderThickness="1" Height="35"/>
+            <TextBlock Text="Цена (₽):" Margin="0,10,0,0" Foreground="#7A5C2E"/>
+            <TextBox Text="{Binding Price}" Margin="0,5" Background="#FFF8F1E9" VerticalContentAlignment="Center" BorderBrush="#D1B06B" BorderThickness="1" Height="35"/>
+            <TextBlock Text="Количество на складе:" Margin="0,10,0,0" Foreground="#7A5C2E"/>
+            <TextBox Text="{Binding InStock}" Margin="0,5" Background="#FFF8F1E9" VerticalContentAlignment="Center" BorderBrush="#D1B06B" BorderThickness="1" Height="35"/>
+            <Button Content="Сохранить" Command="{Binding AddProductCommand}" Width="120" Height="40" Background="LightGreen" Margin="0,50,0,0"/>
+            <TextBlock Text="{Binding StatusMessage}" Foreground="Green" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Window>

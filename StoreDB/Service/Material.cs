@@ -19,6 +19,11 @@ namespace StoreDB.Service
             
         }
 
+        public override string ToString()
+        {
+            return MaterialName;
+        }
+
         public int MaterialID { get; set; }
         public string MaterialName { get; set; }
 

@@ -10,6 +10,19 @@ namespace StoreDB.ContextDB
 {
     public class SQLServerDBContext : DbContext
     {
+
+
+        public SQLServerDBContext () 
+        {
+            Database.EnsureCreated();
+        }
+
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer("Server = (localdb)\\MSSQLLocalDB;Database = JewelleryStoreIou");
+        }
+
         public DbSet<Category> Categories {  get; set; }
         public DbSet<Delivery> Deliverys { get; set; }
         public DbSet<DeliveryItem> DeliveryItems { get; set; }
@@ -20,10 +33,5 @@ namespace StoreDB.ContextDB
         public DbSet<Stone> Stones { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<User> Users { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Server = (localdb)\\MSSQLLocalDB;Database = JewelleryStore");
-        }
     }
 }
