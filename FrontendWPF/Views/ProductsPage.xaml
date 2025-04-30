@@ -5,75 +5,136 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       mc:Ignorable="d"
-      d:DesignHeight="675" d:DesignWidth="850"
+      d:DesignHeight="675" d:DesignWidth="800"
       Title="ProductsPage">
 
     <Page.Resources>
-        <Style x:Key="ProductButtonStyle" TargetType="Button">
+        <Style x:Name="StackPanelStyle" x:Key="StackPanelStyle" TargetType="{x:Type StackPanel}">
+            <Setter Property="Orientation" Value="Vertical"/>
             <Setter Property="Height" Value="210"/>
             <Setter Property="Width" Value="165"/>
-            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Margin" Value="0"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#EFEFEF"/>
+                </Trigger>
+                <Trigger Property="IsMouseCaptureWithin" Value="True">
+                    <Setter Property="Background" Value="#EFEFEF"/>
+                </Trigger>
+
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Name="ImageStyle" x:Key="ImageStyle" TargetType="{x:Type Image}">
+            <Setter Property="Stretch" Value="UniformToFill"/>
+            <Setter Property="Width" Value="150"/>
+            <Setter Property="Height" Value="150"/>
+            <Setter Property="Margin" Value="3"/>
+            <Style.Triggers>
+                <Trigger Property="Image.IsMouseOver" Value="True">
+                    <Setter Property="Stretch" Value="Fill" />
+                    <Setter Property="Height" Value="152"/>
+                    <Setter Property="Width" Value="152"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Name="ButtonStyle" x:Key="ButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Height" Value="210"/>
+            <Setter Property="Width" Value="165"/>
+            <Setter Property="Margin" Value="3"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
+
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter />
+                        </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#EFEFEF"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
 
-        <Style x:Key="ProductImageStyle" TargetType="Image">
-            <Setter Property="Width" Value="150"/>
-            <Setter Property="Height" Value="150"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Stretch" Value="UniformToFill"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#EFEFEF"/>
+                </Trigger>
+
+            </Style.Triggers>
         </Style>
     </Page.Resources>
 
     <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="92*"/>
+            <RowDefinition Height="49*"/>
+            <RowDefinition Height="312*"/>
+            <RowDefinition Height="182*" />
+            <RowDefinition Height="40*"/>
         </Grid.RowDefinitions>
 
-        <!-- Верхняя панель с кнопками действий -->
-        <StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" Height="60">
-            <Button Content="Добавить товар" Width="150" Height="40" Margin="5" Command="{Binding AddProductCommand}"/>
-            <Button Content="Редактировать" Width="150" Height="40" Margin="5" Command="{Binding EditProductCommand}" IsEnabled="{Binding IsProductSelected}"/>
-            <Button Content="Удалить" Width="150" Height="40" Margin="5" Command="{Binding DeleteProductCommand}" IsEnabled="{Binding IsProductSelected}"/>
-            <TextBox Width="300" Height="30" Margin="20,0,0,0" VerticalContentAlignment="Center" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
-        </StackPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+            <ColumnDefinition Width="160*"/>
+        </Grid.ColumnDefinitions>
 
-        <!-- Панель товаров -->
-        <ScrollViewer Grid.Row="1" Margin="10">
-            <ItemsControl ItemsSource="{Binding Products}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
+        <Button Grid.Column="0" Grid.Row="0" Command="{Binding AddCommand}" Cursor="{Binding Cursor}"             
+                Foreground="White"
+                Margin="20,30,10,27"/>
+        <Button x:Name="editBtn" Command="{Binding EditCommand}"
+            Grid.Column="1" Grid.Row="0" Cursor="{Binding Cursor}"
+            Margin="15,30,15,27"                 
+            IsEnabled="{Binding EditButtonEnabled}" RenderTransformOrigin="0.71,0.547" />
 
+        <Button  x:Name="deleteBtn"
+             FontSize="11"
+             Command="{Binding DeleteCommand}"
+             Grid.Column="2" Grid.Row="0" Margin="10,30,20,27"
+             IsEnabled="{Binding DeleteButtonEnabled}" />
+
+        <TextBox Grid.Column="3" Text="{Binding SearchKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+             x:Name="SearchField"
+             
+             VerticalAlignment="Center"
+             Margin="15,0,15,10" Height="42" Grid.ColumnSpan="2"/>
+
+        <!-- products panel -->
+        <ScrollViewer VerticalScrollBarVisibility="Hidden" x:Name="scrollBarViewer" Margin="10,35,10,10" Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="2" Grid.RowSpan="3">
+            <ItemsControl ItemsSource="{Binding Products, Mode=TwoWay, UpdateSourceTrigger=Explicit}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Style="{StaticResource ProductButtonStyle}" Command="{Binding DataContext.SelectProductCommand, RelativeSource={RelativeSource AncestorType=Page}}" CommandParameter="{Binding}">
-                            <StackPanel Orientation="Vertical">
-                                <Image Source="{Binding Image}" Style="{StaticResource ProductImageStyle}"/>
-                                <Label Content="{Binding Name}" HorizontalAlignment="Center" FontWeight="Bold"/>
-                                <Label Content="{Binding Price}" HorizontalAlignment="Center"/>
+                        <Button Style="{StaticResource ButtonStyle}" Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}, Path=DataContext.SelectItemCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
+                            <StackPanel Style="{StaticResource StackPanelStyle}">
+                                <Image Source="{Binding Image}" Style="{StaticResource ImageStyle}"/>
+                                <Label HorizontalAlignment="Center" FontSize="11" FontWeight="DemiBold" Content="{Binding Name}"></Label>
+                                <Label HorizontalAlignment="Center" FontSize="11" Content="{Binding Price}"></Label>
                             </StackPanel>
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel x:Name="products"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
             </ItemsControl>
         </ScrollViewer>
+        <ComboBox x:Name="PriceSort" ItemsSource="{Binding SortOptions}" SelectedIndex="{Binding SelectedPriceOption, Mode=TwoWay}" Grid.Row="1" Grid.Column="0" Height="26" Margin="20,0,10,0"/>
+        <ComboBox x:Name="TypeSort" ItemsSource="{Binding TypeOptions}" SelectedIndex="{Binding SelectedTypeOption, Mode=TwoWay}" Margin="15,0,15,0" Grid.Row="1" Grid.Column="1" Height="26"/>
+        <ComboBox x:Name="WeightSort" ItemsSource="{Binding SortOptions}" SelectedIndex="{Binding SelectedWeightOption, Mode=TwoWay}" Margin="15,0,15,0" Grid.Row="1" Grid.Column="2" Height="26" />
+        <ComboBox x:Name="MetalSort" ItemsSource="{Binding MetalOptions}" SelectedIndex="{Binding SelectedMetalOption, Mode=TwoWay}" Margin="15,0,15,0" Grid.Row="1" Grid.Column="3" Height="26" />
+        <ComboBox x:Name="InsertSort" ItemsSource="{Binding InsertOptions}" SelectedIndex="{Binding SelectedInsertOption, Mode=TwoWay}" Margin="15,0,15,0" Grid.Row="1" Grid.Column="4" Height="26" />
+        <CheckBox FontWeight="Light" IsChecked="{Binding ShowActiveOnly}"  HorizontalAlignment="Left" Margin="20,5,0,282" Width="184" Grid.ColumnSpan="2" Grid.Row="2">
+            <TextBlock FontSize="14" VerticalAlignment="Top" Margin="0,-3,0,0"/>
+        </CheckBox>
+        <Label Grid.Column="2" HorizontalAlignment="Center" Margin="0,224,0,0" Grid.Row="2" VerticalAlignment="Top"/>
     </Grid>
 </Page>
