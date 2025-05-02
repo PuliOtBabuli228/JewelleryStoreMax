@@ -22,14 +22,14 @@ namespace FrontendWPF.Views
     public partial class AddProductPage : Page
     {
 
-        Frame Frame { get; set; }
+        //Frame Frame { get; set; }
 
         public AddProductPage(Frame frame)
         {
             InitializeComponent();
-            AddProductViewModel viewModel = new AddProductViewModel();
-            this.DataContext = viewModel;
-            Frame = frame;
+            //AddProductViewModel viewModel = new AddProductViewModel();
+            //this.DataContext = viewModel;
+            //Frame = frame;
         }
     }
 }

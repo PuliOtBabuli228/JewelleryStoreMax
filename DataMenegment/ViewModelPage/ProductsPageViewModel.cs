@@ -1,154 +1,61 @@
-﻿using System;
+﻿using ClickerApp.ViewModels.Base;
+using DataMenegment.ViewModel;
+using StoreDB.Service;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using System.Windows.Input;
-using StoreDB.Service;
 using System.Threading.Tasks;
-using ClickerApp.ViewModels.Base;
-using StoreDB.ContextDB;
+using System.Windows.Input;
 
 namespace DataMenegment.ViewModelPage
 {
-    public class ProductsPageViewModel : ViewModelBase
+    public class ProductsPageViewModel : BaseViewModel
     {
-        private readonly SQLServerDBContext _context = new();
-        private Product _selectedProduct;
-        private string _searchTerm;
+        private readonly IProductService _productService;
 
-        public ProductsPageViewModel()
-        {
-            // Инициализация коллекции товаров
-            Products = new ObservableCollection<Product>(_context.Products.ToList());
-
-            // Инициализация команд
-            AddProductCommand = new RelayCommand(_ => AddProduct());
-            EditProductCommand = new RelayCommand(_ => EditProduct(), _ => SelectedProduct != null);
-            DeleteProductCommand = new RelayCommand(_ => DeleteProduct(), _ => SelectedProduct != null);
-
-            // Команда для поиска товара
-            SearchProductCommand = new RelayCommand(_ => SearchProduct());
-        }
-
-        // Свойства для привязки
         public ObservableCollection<Product> Products { get; set; }
+
+        private Product _selectedProduct;
         public Product SelectedProduct
         {
             get => _selectedProduct;
-            set
-            {
-                _selectedProduct = value;
-                OnPropertyChanged(nameof(SelectedProduct));
-            }
+            set => SetProperty(ref _selectedProduct, value);
         }
 
-        public string SearchTerm
+        public ICommand LoadProductsCommand { get; }
+        public ICommand AddToCartCommand { get; }
+        public ICommand AddToFavoritesCommand { get; }
+
+        public ProductsPageViewModel(IProductService productService)
         {
-            get => _searchTerm;
-            set
-            {
-                _searchTerm = value;
-                OnPropertyChanged(nameof(SearchTerm));
-            }
+            _productService = productService;
+            Products = new ObservableCollection<Product>();
+
+            LoadProductsCommand = new RelayCommand(LoadProducts);
+            AddToCartCommand = new RelayCommand<Product>(AddToCart);
+            AddToFavoritesCommand = new RelayCommand<Product>(AddToFavorites);
+
+            LoadProducts();
         }
 
-        // Команды для действий с товарами
-        public ICommand AddProductCommand { get; }
-        public ICommand EditProductCommand { get; }
-        public ICommand DeleteProductCommand { get; }
-        public ICommand SearchProductCommand { get; }
-
-        // Метод для добавления нового товара
-        private void AddProduct()
+        private void LoadProducts()
         {
-            // Создаем новый объект товара
-            var newProduct = new Product();
-
-            // Открываем окно для ввода данных нового товара
-            var addProductWindow = new AddProductWindow(newProduct);
-
-            // Обработчик, который сработает при закрытии окна
-            addProductWindow.ProductAdded += (sender, e) =>
-            {
-                // Если товар добавлен, обновляем коллекцию товаров
-                _context.Products.Add(newProduct);
-                _context.SaveChanges();
-
-                Products.Add(newProduct);  // Добавляем новый товар в коллекцию для UI
-            };
-
-            // Показываем окно
-            addProductWindow.ShowDialog();
+            Products.Clear();
+            var items = _productService.GetAllProducts();
+            foreach (var item in items)
+                Products.Add(item);
         }
 
-        // Метод для редактирования выбранного товара
-        private void EditProduct()
+        private void AddToCart(Product product)
         {
-
-            if (SelectedProduct == null) return;  // Если товар не выбран, ничего не делаем
-
-            // Создаем копию выбранного товара для редактирования
-            var productToEdit = new Product
-            {
-                ProductID = SelectedProduct.ProductID,
-                Name = SelectedProduct.Name,
-                CategoryID = SelectedProduct.CategoryID,
-                MaterialID = SelectedProduct.MaterialID,
-                StoneID = SelectedProduct.StoneID,
-                Weight = SelectedProduct.Weight,
-                Price = SelectedProduct.Price,
-                InStock = SelectedProduct.InStock
-            };
-
-            // Открываем окно для редактирования товара
-            var editProductWindow = new EditProductWindow(productToEdit);
-
-            // Обработчик, который сработает при сохранении изменений
-            editProductWindow.ProductEdited += (sender, e) =>
-            {
-                // Если товар изменен, обновляем данные в базе
-                _context.Entry(productToEdit).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                _context.SaveChanges();
-
-                // Обновляем товар в коллекции
-                var index = Products.IndexOf(SelectedProduct);
-                Products[index] = productToEdit;  // Обновляем товар в коллекции UI
-            };
-
-            // Показываем окно
-            editProductWindow.ShowDialog();
+            CartService.Instance.Add(product);
         }
 
-        // Метод для удаления товара
-        private void DeleteProduct()
+        private void AddToFavorites(Product product)
         {
-            if (SelectedProduct == null) return;
-
-            _context.Products.Remove(SelectedProduct);
-            _context.SaveChanges();
-
-            // Обновляем коллекцию товаров
-            Products.Remove(SelectedProduct);
-            SelectedProduct = null;
-        }
-
-        // Метод для поиска товаров по имени
-        private void SearchProduct()
-        {
-            if (string.IsNullOrWhiteSpace(SearchTerm))
-            {
-                Products = new ObservableCollection<Product>(_context.Products.ToList());
-            }
-            else
-            {
-                var searchResults = _context.Products
-                    .Where(p => p.Name.Contains(SearchTerm))
-                    .ToList();
-
-                Products = new ObservableCollection<Product>(searchResults);
-            }
-            OnPropertyChanged(nameof(Products));
+            FavoritesService.Instance.Add(product);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataMenegment.ViewModel;
+using DataMenegment.ViewModelPage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +22,15 @@ namespace FrontendWPF.Views
     /// </summary>
     public partial class ProductsPage : Page
     {
-        public ProductsPage()
+        Frame Frame { get; set; }
+
+        public ProductsPage(Frame frame)
         {
             InitializeComponent();
+            DataContext = new ProductsPageViewModel(new ProductService());
+            AddProductViewModel viewModel = new AddProductViewModel();
+            this.DataContext = viewModel;
+            Frame = frame;
         }
     }
 }

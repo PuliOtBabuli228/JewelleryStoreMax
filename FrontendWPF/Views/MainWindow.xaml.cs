@@ -53,14 +53,9 @@ namespace FrontendWPF.Views
         public ICommand SelectItemToFavoriteCommand { get; }
         public ICommand SelectItemToCartCommand { get; }
 
-        private void AddProductButton_Click(object sender, RoutedEventArgs e)
+        private void ProductButton_Click(object sender, RoutedEventArgs e)
         {
-           MainFrame.Navigate(new AddProductPage(MainFrame));
-        }
-
-        private void OrderButton_Click(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(new ProductsPage());
+           MainFrame.Navigate(new ProductsPage(MainFrame));
         }
 
         public MainWindow()
