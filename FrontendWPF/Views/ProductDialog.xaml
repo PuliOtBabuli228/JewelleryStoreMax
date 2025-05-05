@@ -1,0 +1,81 @@
+﻿<Window x:Class="FrontendWPF.Views.ProductDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Добавление нового товара"
+        Height="820" Width="500"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="Black"
+        WindowStyle="None">
+
+    <ScrollViewer>
+        <StackPanel Margin="10" VerticalAlignment="Top">
+
+            <!-- Название -->
+            <TextBlock Text="Название изделия" Foreground="White"/>
+            <TextBox x:Name="nameFieldRus" Text="{Binding WordRus, Mode=TwoWay}" Margin="0,5,0,5"/>
+            <TextBlock Text="Некорректное название товара!" Foreground="Red" FontSize="10" Visibility="{Binding ErrorProductNameRusVisibility}"/>
+
+            <!-- Количество -->
+            <TextBlock Text="Количество" Foreground="White"/>
+            <TextBox x:Name="quantityField" Text="{Binding Quantity, Mode=TwoWay}" Margin="0,5,0,5"/>
+            <TextBlock Text="Некорректное количество товара!" Foreground="Red" FontSize="10" Visibility="{Binding ErrorQuantityVisibility}"/>
+
+            <!-- Цена -->
+            <TextBlock Text="Цена" Foreground="White"/>
+            <TextBox x:Name="priceField" Text="{Binding Price, Mode=TwoWay}" Margin="0,5,0,5"/>
+            <TextBlock Text="Некорректная цена товара!" Foreground="Red" FontSize="10" Visibility="{Binding ErrorPriceVisibility}"/>
+
+            <!-- Вставка -->
+            <TextBlock Text="Вставка" Foreground="White"/>
+            <ComboBox x:Name="stoneInsert" ItemsSource="{Binding Stones}" SelectedItem="{Binding SelectedStone}" Margin="0,5,0,5"/>
+            <TextBlock Text="Укажите вставки либо выберите 'Без вставок'" Foreground="Red" FontSize="10" Visibility="{Binding ErrorStone}"/>
+
+            <!-- Вес -->
+            <TextBlock Text="Вес (г)" Foreground="White"/>
+            <TextBox x:Name="weightField" Text="{Binding Weight}" Margin="0,5,0,5"/>
+            <TextBlock Text="Некорректный вес товара!" Foreground="Red" FontSize="10" Visibility="{Binding ErrorWeightVisibility}"/>
+
+            <!-- Проба -->
+            <TextBlock Text="Проба" Foreground="White"/>
+            <TextBox x:Name="metalSampleField" Text="{Binding MetalSample}" Margin="0,5,0,5"/>
+            <TextBlock Text="Некорректная проба металла!" Foreground="Red" FontSize="10" Visibility="{Binding ErrorMetalSampleVisibility}"/>
+
+            <!-- Металл -->
+            <TextBlock Text="Металл" Foreground="White"/>
+            <ComboBox x:Name="metalBox" ItemsSource="{Binding Metals}" SelectedItem="{Binding SelectedMetal}" Margin="0,5,0,5"/>
+            <TextBlock Text="Укажите металл" Foreground="Red" FontSize="10" Visibility="{Binding ErrorMetal}"/>
+
+            <!-- Описание -->
+            <TextBlock Text="Описание" Foreground="White"/>
+            <TextBox x:Name="descriptionFieldRus" Text="{Binding DescriptionRus}" Height="60" TextWrapping="Wrap" Margin="0,5,0,5"/>
+
+            <!-- Тип товара -->
+            <TextBlock Text="Тип товара" Foreground="White"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,5">
+                <RadioButton Content="Ожерелья" GroupName="Type" Margin="10,0"/>
+                <RadioButton Content="Кольца" GroupName="Type" Margin="10,0"/>
+                <RadioButton Content="Серьги" GroupName="Type" Margin="10,0"/>
+                <RadioButton Content="Браслеты" GroupName="Type" Margin="10,0"/>
+            </StackPanel>
+            <TextBlock Text="Укажите тип товара!" Foreground="Red" FontSize="10" HorizontalAlignment="Center" Visibility="{Binding ErrorProductType}"/>
+
+            <!-- Активен -->
+            <CheckBox Content="Активен" Foreground="White" Margin="0,10,0,10"/>
+
+            <!-- Картинка -->
+            <TextBlock Text="Картинка" Foreground="White"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,5,0,5">
+                <Button Content="Добавить рисунок" Command="{Binding AddImageCommand}" Margin="0,30,10,30"/>
+                <Rectangle Width="100" Height="100" Fill="{Binding RectFillBrush}" Stroke="{Binding RectStrokeBrush}" StrokeDashArray="3" AllowDrop="True"/>
+            </StackPanel>
+
+            <!-- Кнопки -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,30,0,0">
+                <Button Content="ИЗМЕНИТЬ" Command="{Binding EditCommand}" Width="150" Height="40" Margin="10" Background="Pink"/>
+                <Button Content="ДОБАВИТЬ" Width="150" Height="40" Margin="10" Background="LightGreen"/>
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</Window>
